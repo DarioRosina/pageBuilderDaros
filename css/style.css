@@ -1,0 +1,320 @@
+:root {
+    --primary-color: #0d6efd; /* Bootstrap Primary */
+    --secondary-color: #6c757d; /* Bootstrap Secondary */
+    --success-color: #198754; /* Bootstrap Success */
+    --danger-color: #dc3545; /* Bootstrap Danger */
+    --light-bg: #f8f9fa; /* Bootstrap Light */
+    --white-color: #fff;
+    --border-color: #dee2e6;
+    --border-color-dashed: #adb5bd;
+    --border-radius-base: 0.375rem; /* Bootstrap default */
+    --box-shadow-base: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --box-shadow-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    --font-family-sans-serif: "Inter", sans-serif;
+    --navbar-height: 60px;
+}
+
+body {
+    font-family: var(--font-family-sans-serif);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white-color); /* Sfondo base */
+    color: #212529; /* Colore testo base */
+}
+
+/* Make the container below the navbar fill remaining vertical space */
+.main-row-container {
+    flex-grow: 1;
+    display: flex; /* Needed for potential flex alignment within */
+    overflow: hidden; /* Prevent container itself from scrolling */
+}
+
+/* Make the row fill the container */
+.main-row {
+    flex-grow: 1;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+/* Stili per la sidebar dei componenti */
+#components-sidebar {
+    position: sticky;
+    align-self: flex-start;
+    height: calc(100vh - var(--navbar-height));
+    overflow-y: auto;
+    background-color: var(--light-bg);
+    padding: 10px;
+    border-right: 1px solid var(--border-color);
+    box-shadow: var(--box-shadow-base);
+}
+
+/* Scrollable Main Content Area */
+#main-content-area {
+    height: calc(100vh - var(--navbar-height));
+    overflow-y: auto;
+    padding: 1.5rem;
+    background-color: #e9ecef; /* Sfondo leggermente diverso per contrasto */
+}
+
+/* Stili per i componenti trascinabili nella sidebar */
+.draggable-component {
+    cursor: grab;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-color);
+    background-color: var(--white-color);
+    border-radius: var(--border-radius-base);
+    text-align: center;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    box-shadow: var(--box-shadow-base);
+}
+
+.draggable-component:hover {
+    background-color: #f1f3f5;
+    box-shadow: var(--box-shadow-hover);
+    transform: translateY(-2px);
+}
+
+.draggable-component img {
+    max-width: 100%;
+    height: auto;
+    pointer-events: none; /* Impedisce all'immagine di interferire col drag */
+}
+
+.navbar {
+    min-height: var(--navbar-height); /* Usa variabile */
+    z-index: 1030;
+    box-shadow: var(--box-shadow-base); /* Ombra anche alla navbar */
+}
+
+.navbar-brand sub {
+    color: var(--border-color);
+}
+
+#build-canvas {
+    padding: 25px;
+    min-height: calc(100vh - var(--navbar-height) - 50px);
+    border: 2px dashed var(--border-color-dashed);
+    background-color: var(--white-color);
+    border-radius: var(--border-radius-base);
+    position: relative;
+    flex-grow: 1;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1); /* Ombra interna leggera */
+}
+
+/* Stili per gli elementi rilasciati nel canvas */
+.canvas-element {
+    position: relative;
+    padding: 15px; /* Aumentato padding */
+    margin-bottom: 15px; /* Aumentato margine */
+    border: 1px solid var(--border-color);
+    background-color: var(--white-color); /* Sfondo bianco per contrasto */
+    border-radius: var(--border-radius-base);
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Migliorata transizione */
+    box-shadow: var(--box-shadow-base);
+}
+.canvas-element.selected {
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 8px rgba(13, 110, 253, 0.4); /* Ombra piu' morbida */
+}
+
+/* Stili per il placeholder durante il drag */
+.drop-placeholder {
+    height: 60px; /* Leggermente piu' alto */
+    background-color: rgba(13, 110, 253, 0.1); /* Meno opaco */
+    border: 2px dashed var(--primary-color);
+    margin-bottom: 15px; /* Coerente con canvas-element */
+    border-radius: var(--border-radius-base);
+    transition: all 0.2s ease;
+    box-shadow: inset 0 0 10px rgba(13, 110, 253, 0.1); /* Ombra interna */
+}
+
+/* Stili per rendere il testo editabile */
+[contenteditable="true"] {
+    cursor: text;
+    border: 1px dashed transparent; /* Bordo trasparente di default */
+    padding: 4px 6px; /* Padding leggermente aumentato */
+    min-height: 1.5em;
+    border-radius: calc(var(--border-radius-base) * 0.8); /* Radius leggermente piu' piccolo */
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+[contenteditable="true"]:hover {
+    border-color: var(--border-color-dashed); /* Mostra bordo su hover */
+}
+[contenteditable="true"]:focus {
+    outline: none; /* Rimuovi outline di default */
+    border: 1px solid var(--primary-color);
+    background-color: #e7f1ff;
+    box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.25); /* Focus ring stile Bootstrap */
+}
+
+/* Stili per il modal di esportazione */
+#exportHtmlModal .modal-body textarea {
+    min-height: 300px;
+    font-family: monospace;
+}
+
+/* Stili per i controlli dell'elemento (es. elimina) */
+.element-controls {
+    position: absolute;
+    top: -15px; /* Mantiene posizione */
+    right: 10px; /* Leggermente spostato */
+    display: flex;
+    gap: 5px; /* Spazio leggermente aumentato */
+    background-color: rgba( 40, 40, 40, 0.8); /* Sfondo piu' scuro e meno trasparente */
+    backdrop-filter: blur(3px); /* Effetto blur per modernità (supporto variabile) */
+    padding: 5px 8px; /* Padding leggermente aumentato */
+    border-radius: 50px; /* Forma a pillola piu' pronunciata */
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease; /* Transizione piu' morbida */
+    transform: translateY(8px) scale(0.95); /* Inizia piu' in basso e leggermente scalato */
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Ombra per i controlli */
+}
+
+/* Style for individual control buttons */
+.control-button {
+    color: var(--white-color);
+    border: none;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    padding: 0;
+    background-color: transparent;
+}
+.control-button:hover {
+    transform: scale(1.1); /* Effetto hover ingrandimento */
+}
+.control-button:active {
+    transform: scale(0.95); /* Effetto click */
+}
+
+/* --- Add styles for drag handle --- */
+.drag-handle-button {
+    background-color: var(--secondary-color);
+    cursor: grab;
+    touch-action: none;
+}
+.drag-handle-button:active {
+    cursor: grabbing;
+}
+.drag-handle-button:hover {
+    background-color: #5a6268; /* Secondary piu' scuro */
+}
+
+/* Modificato per usare direttamente l'icona frecce */
+.drag-handle-button i::before { /* Applica a ::before dell'icona interna */
+    transition: content 0.2s ease; /* Transizione per il cambio icona */
+}
+.drag-handle-button:hover i::before {
+    content: "\F14E"; /* Codice Unicode per bi-arrows-vertical */
+}
+
+/* Duplicate button styles */
+.duplicate-button {
+    background-color: var(--success-color);
+}
+.duplicate-button:hover {
+    background-color: #146c43; /* Success piu' scuro */
+}
+
+/* Specific colors for move buttons */
+.move-up-button,
+.move-down-button {
+    background-color: var(--primary-color);
+}
+.move-up-button:hover,
+.move-down-button:hover {
+    background-color: #0a58ca; /* Primary piu' scuro */
+}
+
+/* Specific color for delete button */
+.delete-button {
+    background-color: var(--danger-color);
+}
+.delete-button:hover {
+    background-color: #b02a37; /* Danger piu' scuro */
+}
+
+.canvas-element:hover .element-controls,
+.canvas-element.selected .element-controls {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+.canvas-element.dragging {
+    opacity: 0.5;
+    border: 2px dashed #0d6efd;
+}
+.no-gutter {
+    --bs-gutter-x: 0;
+}
+
+.hover-info {
+    position: absolute;
+    bottom: calc(100% + 1px);
+    left: 0;
+    background-color: rgba(40, 40, 40, 0.9);
+    backdrop-filter: blur(3px); /* Effetto blur */
+    color: var(--white-color);
+    padding: 6px 12px;
+    border-radius: 15px 15px 0 5px;
+    z-index: 1050;
+    font-size: 1rem;
+    white-space: nowrap;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+}
+
+/* Mostra l'info box su hover O se l'elemento è selezionato */
+.canvas-element:hover .hover-info,
+.canvas-element.selected .hover-info {
+    display: flex;
+    opacity: 1;
+    transform: translateY(0) scale(1); /* Animazione completa */
+}
+
+.hover-info .tag-name {
+    font-family: monospace;
+    font-weight: bold;
+}
+
+.hover-info .edit-button {
+    background: none;
+    border: none;
+    color: var(--white-color);
+    padding: 0 3px;
+    line-height: 1;
+    cursor: pointer;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease, transform 0.15s ease;
+}
+
+.hover-info .edit-button:hover {
+    color: #dee2e6; /* Grigio chiaro su hover */
+    transform: scale(1.1); /* Effetto hover */
+}
+.hover-info .edit-button:active {
+    transform: scale(0.95); /* Effetto click */
+}
+
+/* Stile per forzare la visibilita' del focus impostato via JS */
+.force-focus-visible:focus {
+    outline: 2px solid Highlight; /* Usa il colore di sistema per l'highlight */
+    outline: -webkit-focus-ring-color auto 1px; /* Stile focus standard di Chrome/Safari */
+    box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.25); /* Ombreggiatura simile a Bootstrap */
+}
