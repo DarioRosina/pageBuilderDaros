@@ -6,6 +6,10 @@ Un semplice Page Builder drag-and-drop realizzato interamente in Vanilla JavaScr
 
 Questo progetto è un'applicazione web che permette di costruire layout di pagine HTML visivamente, trascinando componenti predefiniti su un'area di lavoro (canvas). Offre funzionalità di base per l'editing, l'anteprima e l'esportazione del codice HTML generato.
 
+**Demo Online:** Prova la versione live qui: [https://page-builder-daros.vercel.app/](https://page-builder-daros.vercel.app/)
+
+![Anteprima Interfaccia Page Builder](../screenshot/previewInterface_001.jpg)
+
 ## Caratteristiche Principali
 
 *   **Drag & Drop:** Trascina i componenti disponibili dalla barra laterale direttamente sul canvas per costruire la tua pagina.
