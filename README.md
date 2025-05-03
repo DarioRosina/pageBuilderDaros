@@ -8,7 +8,7 @@ Questo progetto è un'applicazione web che permette di costruire layout di pagin
 
 **Demo Online:** Prova la versione live qui: [https://page-builder-daros.vercel.app/](https://page-builder-daros.vercel.app/)
 
-![Anteprima Interfaccia Page Builder](../screenshot/previewInterface_001.jpg)
+![Anteprima Interfaccia Page Builder](screenshot/previewInterface_001.jpg)
 
 ## Caratteristiche Principali
 
