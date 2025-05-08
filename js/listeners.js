@@ -1,3 +1,11 @@
+/* WINDOW */
+
+// Avviso l'utente prima che chiuda o ricarichi la pagina
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault(); // Necessario in alcuni browser
+    e.returnValue = ''; // Stringa vuota per attivare il messaggio predefinito
+});
+
 /* DOCUMENT */
 
 // Deseleziona l'elemento se si clicca fuori
