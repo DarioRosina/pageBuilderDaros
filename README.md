@@ -28,16 +28,15 @@ Questo progetto è un'applicazione web che permette di costruire layout di pagin
 
 1.  **Aggiunta Componenti:** Seleziona un componente dalla barra laterale sinistra (es. Titolo, Paragrafo, Immagine) e trascinalo nell'area del canvas a destra.
 2.  **Editing:** Fai doppio click su un componente nel canvas o selezionalo e clicca "Modifica" per aprirne le opzioni specifiche (es. cambiare il livello di un titolo, l'URL di un link, il tipo di un input).
-3.  **Configurazione Layout:** Clicca sull'icona a forma di ingranaggio (<i class="bi bi-gear"></i>) per accedere alle impostazioni e definire la struttura delle colonne del layout principale.
+3.  **Configurazione Layout:** Clicca sull'icona a forma di ingranaggio (⚙) per accedere alle impostazioni e definire la struttura delle colonne del layout principale.
 4.  **Importazione:** Usa il pulsante "Importa" per incollare codice HTML. Gli elementi riconosciuti verranno aggiunti al canvas.
 5.  **Anteprima:** Clicca su "Anteprima" per vedere come apparirà la pagina finale.
 6.  **Esportazione:** Clicca su "Esporta" per ottenere il codice HTML della pagina creata, pronto per essere copiato.
 
 ## Limitazioni Attuali
 
-*   L'importazione HTML gestisce principalmente elementi singoli o strutture semplici. L'incollamento di codice HTML complesso e profondamente nidificato potrebbe non essere interpretato correttamente come un unico componente trascinabile.
-*   Le opzioni di personalizzazione dei componenti sono ancora in fase di sviluppo.
+*   L'importazione HTML considera solamente tag HTML che sono figlie dirette del tab BODY o del tag DIV.container. Tag maggiormente nidificati vengono ignorati.
 
 ---
 
-_Sviluppato da [dariorosina](https://github.com/dariorosina)_
+_Sviluppato da [Dario Rosina](https://github.com/dariorosina)_
