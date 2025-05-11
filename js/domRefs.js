@@ -9,6 +9,7 @@ const importFeedback = document.getElementById('importFeedback');
 
 const exportedHtmlCodeTextarea = document.getElementById('exportedHtmlCode');
 const copyHtmlButton = document.getElementById('copyHtmlButton');
+const codeBlock = document.getElementById('exportedHtmlCodeBlock');
 
 const previewButton = document.getElementById('previewButton');
 

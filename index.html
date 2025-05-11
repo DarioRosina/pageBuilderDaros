@@ -6,10 +6,11 @@
     <title>Page Builder Drag & Drop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?3">
+    <link rel="stylesheet" href="css/style.css?4">
 </head>
 <body>
 
@@ -169,7 +170,10 @@
                 </div>
                 <div class="modal-body p-4 pt-0">
                     <p>Copia il codice HTML generato dalla tua pagina:</p>
-                    <textarea id="exportedHtmlCode" class="form-control rounded-3" rows="10" readonly></textarea>
+                    <div id="highlightedCodeContainer" style="max-height: 400px; border: 1px solid #6c757d; border-radius: .25rem;">
+                        <pre style="margin: 0; white-space: pre; overflow: auto; max-height: 400px; background-color: #272822; padding: 1rem;"><code class="language-html" id="exportedHtmlCodeBlock"></code></pre>
+                    </div>
+                    <textarea id="exportedHtmlCode" style="position: absolute; left: -9999px; top: -9999px; opacity: 0; height: 0; width: 0;"></textarea>
                 </div>
                 <div class="modal-footer flex-nowrap p-0">
                     <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 m-0 rounded-0 border-end" id="copyHtmlButton"><strong>Copia negli appunti</strong></button>
@@ -406,9 +410,30 @@
     </div>
 
 
+
+    <!-- Modal Canvas Vuoto -->
+    <div class="modal fade" id="emptyCanvasModal" tabindex="-1" aria-labelledby="emptyCanvasModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3 shadow">
+                <div class="modal-header p-4 pb-3 border-bottom-0">
+                    <h1 class="fw-bold mb-0 fs-4" id="emptyCanvasModalLabel">Attenzione</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 pt-0">
+                    <p>Il canvas è vuoto. Aggiungi elementi prima di visualizzare l'anteprima.</p>
+                </div>
+                <div class="modal-footer flex-nowrap p-0">
+                    <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-12 m-0 rounded-0" data-bs-dismiss="modal">Chiudi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script src="js/domRefs.js?48"></script>
+    <script src="js/domRefs.js?51"></script>
     <script src="js/handlersElements.js?48"></script>
     <script src="js/handlersControls.js?48"></script>
     <script src="js/handlersSettings.js?48"></script>
@@ -417,10 +442,11 @@
     <script src="js/canvas.js?48"></script>
     <script src="js/elementsFactory.js?48"></script>
     <script src="js/htmlParser.js?48"></script>
-    <script src="js/htmlImport.js?48"></script>
-    <script src="js/htmlExport.js?49"></script>
+    <script src="js/htmlImport.js?49"></script>
+    <script src="js/htmlExport.js?52"></script>
     <script src="js/htmlPreview.js?48"></script>
     <script src="js/listeners.js?48"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual></script>
 
     <script>
         checkCanvasEmpty(); // Controlla lo stato iniziale del canvas

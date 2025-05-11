@@ -1,5 +1,6 @@
 // --- Funzione per generare HTML pulito ---
 function generateCleanHtml() {
+    const indentContainer = '        '; // 8 spazi per l'indentazione
     let finalHtml = '';
     const canvasElements = buildCanvas.querySelectorAll('.canvas-element');
 
@@ -16,8 +17,7 @@ function generateCleanHtml() {
             // Rimuovi attributi specifici del builder dall'elemento clonato e dai suoi figli
             const removeAttributes = (el) => {
                 el.removeAttribute('contenteditable');
-                // Rimuovi stili inline specifici del builder, ma potresti voler mantenere alcuni stili essenziali
-                // Considera se rimuovere tutti gli stili o solo quelli aggiunti dal builder
+                // Rimuovi stili inline specifici del builder
                 if (el.tagName !== 'HR') {
                     el.removeAttribute('style'); // Rimuovi stili inline (es. cursor: pointer)
                 }
@@ -43,12 +43,6 @@ function generateCleanHtml() {
                     // console.log("Placeholder link found:", el);
                 }
 
-                // --- Specifically handle link cleaning if needed ---
-                // The general attribute removal above should handle links,
-                // but you could add specific checks here if necessary.
-                // For example, ensure 'href' is preserved.
-                // The current logic preserves href as it's not explicitly removed.
-
                 // Pulisci ricorsivamente i figli
                 el.querySelectorAll('*').forEach(child => removeAttributes(child));
             };
@@ -57,9 +51,11 @@ function generateCleanHtml() {
 
              // Aggiungi un margine inferiore standard per spaziatura
              clone.classList.add('mb-3'); // Usa margine Bootstrap
-
-             // Ottieni l'HTML esterno dell'elemento pulito
-            finalHtml += clone.outerHTML + '\n\n'; // Aggiungi a capo per leggibilita'
+            
+            // Indenta ogni linea dell'HTML pulito creato dall'utente
+            const elementHtml = clone.outerHTML;
+            const indentedElementHtml = indentContainer + elementHtml.replace(/\n/g, '\n' + indentContainer);
+            finalHtml += indentedElementHtml + '\n\n';
         }
     });
     return finalHtml.trim(); // Ritorna solo il contenuto del body pulito
@@ -68,6 +64,10 @@ function generateCleanHtml() {
 
 // Definisci l'handler per il click sul pulsante di copia
 const handleCopyHtmlClick = () => {
+    if (!exportedHtmlCodeTextarea || !exportedHtmlCodeTextarea.value) {
+        console.warn('Nessun contenuto da copiare o textarea non trovata.');
+        return;
+    }
     exportedHtmlCodeTextarea.select();
     try {
         document.execCommand('copy');
@@ -89,40 +89,55 @@ copyHtmlButton.addEventListener('click', handleCopyHtmlClick);
 
 // Definisci l'handler per l'evento 'show.bs.modal'
 const handleExportModalShow = () => {
-    const bodyContent = generateCleanHtml(); // Chiama la funzione riutilizzabile
+    const bodyContent = generateCleanHtml();
+    
 
-    if (!bodyContent) {
-        exportedHtmlCodeTextarea.value = '<p class="text-center text-muted">Il canvas è vuoto.</p>'; // Messaggio se vuoto
-        copyHtmlButton.disabled = true; // Disabilita copia se vuoto
+    if (!codeBlock || !exportedHtmlCodeTextarea || !copyHtmlButton) {
+        console.error('Elementi del modal di  esportazione non trovati.');
         return;
     }
 
-    // Formatta l'output per essere una pagina HTML completa
-    const fullPageHtml = `<!DOCTYPE html>
+    if (!bodyContent) {
+        codeBlock.textContent = 'Il canvas è vuoto.';
+        codeBlock.className = 'language-text'; // Indica a Prism di trattarlo come testo semplice
+        exportedHtmlCodeTextarea.value = '';
+        copyHtmlButton.disabled = true;
+    } else {
+        const fullPageHtml = `<!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pagina Generata</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<style>
-body { padding: 15px; background-color: #fff; }
-.container{ 
-    display: grid;
-    grid-template-columns: repeat(${pageColumnCount}, 1fr);
-    gap: 10px;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina Generata</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 15px; background-color: #fff; }
+        .container{ 
+            display: grid;
+            grid-template-columns: repeat(${typeof pageColumnCount !== 'undefined' ? pageColumnCount : 1}, 1fr);
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-${bodyContent}
-</div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script> <!-- Escape closing script tag -->
+    <div class="container">
+        ${bodyContent}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script> <!-- Escape closing script tag -->
 </body>
 </html>`;
 
-    exportedHtmlCodeTextarea.value = fullPageHtml;
+        codeBlock.textContent = fullPageHtml;
+        codeBlock.className = 'language-html'; // Imposta la classe per Prism
+        exportedHtmlCodeTextarea.value = fullPageHtml; // Per la copia
+        copyHtmlButton.disabled = false;
+    }
+
+    // Evidenzia il codice con PrismJS
+    if (typeof Prism !== 'undefined' && Prism.highlightElement) {
+        Prism.highlightElement(codeBlock);
+    }
+    
     copyHtmlButton.innerHTML = '<strong>Copia negli appunti</strong>'; // Resetta il testo del pulsante
     copyHtmlButton.disabled = false; // Abilita copia
 };

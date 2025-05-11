@@ -318,3 +318,17 @@ body {
     outline: -webkit-focus-ring-color auto 1px; /* Stile focus standard di Chrome/Safari */
     box-shadow: 0 0 0 0.25rem rgba(176, 42, 55, 0.25); /* Ombreggiatura simile a Bootstrap */
 }
+
+/* Effetto rotazione per icona settings modal */
+button[data-bs-target="#settingsModal"] i, /* Se l'icona è un tag <i> */
+button[data-bs-target="#settingsModal"] .bi-gear, /* Target più specifico per Bootstrap Icon */
+button[data-bs-target="#settingsModal"] .bi-gear-fill {
+    display: inline-block; /* Assicura che transform funzioni correttamente */
+    transition: transform 0.3s ease-in-out;
+}
+
+button[data-bs-target="#settingsModal"]:hover i,
+button[data-bs-target="#settingsModal"]:hover .bi-gear,
+button[data-bs-target="#settingsModal"]:hover .bi-gear-fill {
+    transform: rotate(90deg);
+}

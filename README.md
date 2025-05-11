@@ -23,6 +23,7 @@ Questo progetto è un'applicazione web che permette di costruire layout di pagin
 
 *   **Bootstrap 5:** Utilizzato per la griglia, i componenti UI (modali, bottoni, card, ecc.) e lo stile generale.
 *   **Bootstrap Icons:** Utilizzato per le icone nell'interfaccia.
+*   **Prism.js:** Utilizzato per l'evidenziazione della sintassi del codice HTML nel modale di esportazione.
 
 ## Come Funziona
 
@@ -35,7 +36,7 @@ Questo progetto è un'applicazione web che permette di costruire layout di pagin
 
 ## Limitazioni Attuali
 
-*   L'importazione HTML considera solamente tag HTML che sono figlie dirette del tab BODY o del tag DIV.container. Tag maggiormente nidificati vengono ignorati.
+*   Durante l'importazione HTML, vengono considerati solo gli elementi HTML che sono figli diretti del tag BODY o del DIV con classe 'container'. Gli elementi annidati più in profondità vengono ignorati.
 
 ---
 

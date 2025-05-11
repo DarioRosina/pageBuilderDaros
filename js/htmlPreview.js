@@ -3,7 +3,14 @@
 const handlePreviewClick = () => {
     const bodyContent = generateCleanHtml();
     if (!bodyContent) {
-        alert("Il canvas è vuoto. Aggiungi elementi prima di visualizzare l'anteprima.");
+        const emptyCanvasModalElement = document.getElementById('emptyCanvasModal');
+        if (emptyCanvasModalElement) {
+            const modal = bootstrap.Modal.getOrCreateInstance(emptyCanvasModalElement);
+            modal.show();
+        } else {
+            // Fallback se la modale non dovesse essere trovata, anche se non dovrebbe succedere
+            alert("Il canvas è vuoto. Aggiungi elementi prima di visualizzare l'anteprima. (Modale non trovata)");
+        }
         return;
     }
 
