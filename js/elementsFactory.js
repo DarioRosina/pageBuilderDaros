@@ -118,6 +118,9 @@ function createComponentElement(type, elementToWrap = null) {
                 removeEventListener('dblclick', promptChangeInputAttributes);
                 addEventListener('dblclick', promptChangeInputAttributes);
                 setAttribute('draggable', 'false');
+                // Aggiungi prevenzione comportamento predefinito per tipi specifici
+                removeEventListener('click', preventInputDefaultBehavior);
+                addEventListener('click', preventInputDefaultBehavior);
             }
             hasDoubleClickAction = true;
             break;

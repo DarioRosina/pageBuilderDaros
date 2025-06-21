@@ -1,43 +1,46 @@
+Welcome to the project!  
+🔗 [Italiano (README.it.md)](README.it.md)
+
 # Page Builder VanillaJS (daros)
 
-Un semplice Page Builder drag-and-drop realizzato interamente in Vanilla JavaScript, con il supporto di Bootstrap per la struttura e lo stile.
+A simple drag-and-drop Page Builder built entirely in Vanilla JavaScript, with Bootstrap support for structure and styling.
 
-## Descrizione
+## Description
 
-Questo progetto è un'applicazione web che permette di costruire layout di pagine HTML visivamente, trascinando componenti predefiniti su un'area di lavoro (canvas). Offre funzionalità di base per l'editing, l'anteprima e l'esportazione del codice HTML generato.
+This project is a web application that allows you to build HTML page layouts visually, by dragging predefined components onto a workspace (canvas). It offers basic functionality for editing, previewing, and exporting the generated HTML code.
 
-**Demo Online:** Prova la versione live qui: [https://page-builder-daros.vercel.app/](https://page-builder-daros.vercel.app/)
+**Online Demo:** Try the live version here: [https://page-builder-daros.vercel.app/](https://page-builder-daros.vercel.app/)
 
-![Anteprima Interfaccia Page Builder](screenshot/previewInterface_001.jpg)
+![Page Builder Interface Preview](screenshot/demo_ENG.gif)
 
-## Caratteristiche Principali
+## Main Features
 
-*   **Drag & Drop:** Trascina i componenti disponibili dalla barra laterale direttamente sul canvas per costruire la tua pagina.
-*   **Editing dei Componenti:** Modifica le proprietà dei componenti aggiunti (testo, attributi, stili) facendo doppio click su di essi o utilizzando il pulsante "Modifica" nella Info-Box che appare alla selezione.
-*   **Importazione HTML:** Incolla codice HTML esistente per aggiungere elementi al canvas. **Nota:** Attualmente, l'importazione supporta solo l'aggiunta di elementi di primo livello (non strutture nidificate complesse all'interno di un singolo blocco importato).
-*   **Anteprima Live:** Visualizza un'anteprima in tempo reale della pagina che stai costruendo in una finestra modale.
-*   **Esportazione HTML:** Genera ed esporta il codice HTML pulito corrispondente al layout creato sul canvas.
-*   **Vanilla JavaScript:** Scritto interamente in JavaScript puro, senza dipendenze da framework JS esterni (come React, Vue, Angular, jQuery, ecc.).
+*   **Drag & Drop:** Drag available components from the sidebar directly onto the canvas to build your page.
+*   **Component Editing:** Modify the properties of added components (text, attributes, styles) by double-clicking on them or using the "Edit" button in the Info-Box that appears upon selection.
+*   **HTML Import:** Paste existing HTML code to add elements to the canvas. **Note:** Currently, import supports only the addition of top-level elements (not complex nested structures within a single imported block).
+*   **Live Preview:** View a real-time preview of the page you're building in a modal window.
+*   **HTML Export:** Generate and export clean HTML code corresponding to the layout created on the canvas.
+*   **Vanilla JavaScript:** Written entirely in pure JavaScript, without dependencies on external JS frameworks (such as React, Vue, Angular, jQuery, etc.).
 
-## Dipendenze
+## Dependencies
 
-*   **Bootstrap 5:** Utilizzato per la griglia, i componenti UI (modali, bottoni, card, ecc.) e lo stile generale.
-*   **Bootstrap Icons:** Utilizzato per le icone nell'interfaccia.
-*   **Prism.js:** Utilizzato per l'evidenziazione della sintassi del codice HTML nel modale di esportazione.
+*   **Bootstrap 5:** Used for the grid, UI components (modals, buttons, cards, etc.) and general styling.
+*   **Bootstrap Icons:** Used for icons in the interface.
+*   **Prism.js:** Used for HTML code syntax highlighting in the export modal.
 
-## Come Funziona
+## How It Works
 
-1.  **Aggiunta Componenti:** Seleziona un componente dalla barra laterale sinistra (es. Titolo, Paragrafo, Immagine) e trascinalo nell'area del canvas a destra.
-2.  **Editing:** Fai doppio click su un componente nel canvas o selezionalo e clicca "Modifica" per aprirne le opzioni specifiche (es. cambiare il livello di un titolo, l'URL di un link, il tipo di un input).
-3.  **Configurazione Layout:** Clicca sull'icona a forma di ingranaggio (⚙) per accedere alle impostazioni e definire la struttura delle colonne del layout principale.
-4.  **Importazione:** Usa il pulsante "Importa" per incollare codice HTML. Gli elementi riconosciuti verranno aggiunti al canvas.
-5.  **Anteprima:** Clicca su "Anteprima" per vedere come apparirà la pagina finale.
-6.  **Esportazione:** Clicca su "Esporta" per ottenere il codice HTML della pagina creata, pronto per essere copiato.
+1.  **Adding Components:** Select a component from the left sidebar (e.g. Heading, Paragraph, Image) and drag it into the canvas area on the right.
+2.  **Editing:** Double-click on a component in the canvas or select it and click "Edit" to open its specific options (e.g. changing a heading level, a link's URL, an input's type).
+3.  **Layout Configuration:** Click on the gear icon (⚙) to access settings and define the column structure of the main layout.
+4.  **Import:** Use the "Import" button to paste HTML code. Recognised elements will be added to the canvas.
+5.  **Preview:** Click on "Preview" to see how the final page will appear.
+6.  **Export:** Click on "Export" to get the HTML code of the created page, ready to be copied.
 
-## Limitazioni Attuali
+## Current Limitations
 
-*   Durante l'importazione HTML, vengono considerati solo gli elementi HTML che sono figli diretti del tag BODY o del DIV con classe 'container'. Gli elementi annidati più in profondità vengono ignorati.
+*   During HTML import, only HTML elements that are direct children of the BODY tag or of the DIV with 'container' class are considered. Elements nested deeper are ignored.
 
 ---
 
-_Sviluppato da [Dario Rosina](https://github.com/dariorosina)_
+_Developed by [Dario Rosina](https://github.com/dariorosina)_

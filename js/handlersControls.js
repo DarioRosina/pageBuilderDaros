@@ -71,7 +71,7 @@ function duplicateElement(event) {
     // Trova l'elemento di contenuto principale, escludendo i controlli.
     // Questo selettore cerca figli diretti del clone che siano i tipi di contenuto noti.
     // Assicurati che i tuoi elementi di contenuto (h1, p, img, ecc.) siano figli diretti del wrapper.
-    const contentElement = clone.querySelector(':scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6, :scope > p, :scope > img, :scope > button:not(.control-button), :scope > a, :scope > .card, :scope > hr');
+    const contentElement = clone.querySelector(':scope > h1, :scope > h2, :scope > h3, :scope > h4, :scope > h5, :scope > h6, :scope > p, :scope > img, :scope > button:not(.control-button), :scope > a, :scope > .card, :scope > hr, :scope > input');
     // ':scope >' cerca solo figli diretti.
     // 'button:not(.control-button)' esclude i pulsanti di controllo se hanno quella classe.
     // Se la struttura e' diversa (es. il contenuto e' dentro un altro div), adatta il selettore.
@@ -111,11 +111,15 @@ function duplicateElement(event) {
                 removeEventListener('dblclick', promptChangeInputAttributes);
                 addEventListener('dblclick', promptChangeInputAttributes);
                 title = 'Doppio click per cambiare attributi';
+                // Aggiungi prevenzione comportamento predefinito per tipi specifici
+                removeEventListener('click', preventInputDefaultBehavior);
+                addEventListener('click', preventInputDefaultBehavior);
             }
         }
+        // --- Fine aggiunta per Input ---
         // --- Fine aggiunta per Heading ---
 
-        // --- Aggiunta specifica per Input ---
+        // --- Aggiunta specifica per img ---
         if (contentElement.tagName === 'IMG') {
             console.log('Riattacco dblclick listener al clone immagine:', contentElement);
              // Rimuovi prima di aggiungere
@@ -160,6 +164,10 @@ function duplicateElement(event) {
     // Riattiva i listener per i controlli sul clone (delete, duplicate, move, drag)
     // Assicurati che addControlListeners gestisca correttamente il drag handle del clone
     addControlListeners(clone);
+    
+    // Aggiungi il listener per la selezione dell'elemento
+    clone.removeEventListener('click', handleElementSelection);
+    clone.addEventListener('click', handleElementSelection);
     
     // Seleziona il nuovo elemento clonato
     handleElementSelection({ currentTarget: clone });

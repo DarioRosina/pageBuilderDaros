@@ -17,7 +17,7 @@
     <!-- NAVBAR -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom sticky-top">
         <div class="container-fluid">
-            <a class="navbar-brand" href="https://github.com/dariorosina" target="_blank">Page Builder <sub>(daros)</sub></a>
+            <a class="navbar-brand" href="https://github.com/dariorosina" target="_blank">Page Builder <sub>(1.0.1) (daros)</sub></a>
             <div class="ms-auto"> <!-- Wrap buttons for alignment -->
                 <button class="btn btn-outline-success rounded-pill me-2" data-bs-toggle="modal" data-bs-target="#importHtmlModal">
                     <i class="bi bi-box-arrow-in-down me-1"></i>Importa
@@ -434,13 +434,14 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script src="js/domRefs.js?51"></script>
-    <script src="js/handlersElements.js?48"></script>
-    <script src="js/handlersControls.js?48"></script>
+    <script src="js/handlersElements.js?55"></script>
+    <script src="js/handlersControls.js?50"></script>
     <script src="js/handlersSettings.js?48"></script>
     <script src="js/handlersDragDrop.js?48"></script>
+    <script src="js/handlersComponent.js?4"></script>
     <script src="js/promptsElements.js"></script>
     <script src="js/canvas.js?48"></script>
-    <script src="js/elementsFactory.js?48"></script>
+    <script src="js/elementsFactory.js?49"></script>
     <script src="js/htmlParser.js?48"></script>
     <script src="js/htmlImport.js?49"></script>
     <script src="js/htmlExport.js?52"></script>
@@ -450,6 +451,13 @@
 
     <script>
         checkCanvasEmpty(); // Controlla lo stato iniziale del canvas
+        // Inizializza i gestori quando il DOM è pronto
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeSidebarDoubleClickHandlers);
+        } else {
+            // Il DOM è già caricato
+            initializeSidebarDoubleClickHandlers();
+        }
     </script>
 
 </body>
