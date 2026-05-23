@@ -9,7 +9,7 @@ A simple drag-and-drop Page Builder built entirely in Vanilla JavaScript, with B
 
 This project is a web application that allows you to build HTML page layouts visually, by dragging predefined components onto a workspace (canvas). It offers basic functionality for editing, previewing, and exporting the generated HTML code.
 
-**Online Demo:** Try the live version here: [https://page-builder-daros.vercel.app/](https://page-builder-daros.vercel.app/)
+**Online Demo:** Try the live version here: [https://builder.darioros.it](https://builder.darioros.it)
 
 ![Page Builder Interface Preview](screenshot/demo_ENG.gif)
 

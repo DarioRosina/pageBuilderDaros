@@ -7,6 +7,14 @@ Tutte le modifiche rilevanti apportate a questo progetto saranno documentate in 
 Il formato si basa su [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e questo progetto aderisce al [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-05-23
+
+### Changed
+
+- Refactor del flusso di gestione dello stage con una struttura basata su registry, centralizzando registrazione e recupero degli stage.
+
+- Migliorata l'organizzazione della logica relativa allo stage per rendere piu' semplici manutenzione ed estensioni future.
+
 ## [1.0.1] - 2025-06-21
 
 ### Added

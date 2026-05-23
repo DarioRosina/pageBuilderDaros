@@ -52,13 +52,68 @@ function generateCleanHtml() {
              // Aggiungi un margine inferiore standard per spaziatura
              clone.classList.add('mb-3'); // Usa margine Bootstrap
             
-            // Indenta ogni linea dell'HTML pulito creato dall'utente
-            const elementHtml = clone.outerHTML;
-            const indentedElementHtml = indentContainer + elementHtml.replace(/\n/g, '\n' + indentContainer);
-            finalHtml += indentedElementHtml + '\n\n';
+            // Serializza l'elemento con indentazione controllata, ignorando gli spazi
+            // introdotti dai template multilinea usati dal builder.
+            finalHtml += formatCleanHtmlElement(clone, indentContainer) + '\n\n';
         }
     });
     return finalHtml.trim(); // Ritorna solo il contenuto del body pulito
+}
+
+function formatCleanHtmlElement(element, indent = '') {
+    const voidElements = new Set(['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG', 'INPUT', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR']);
+    const tagName = element.tagName.toLowerCase();
+    const attributes = Array.from(element.attributes)
+        .map(attr => ` ${attr.name}="${escapeHtmlAttribute(attr.value)}"`)
+        .join('');
+    const openingTag = `${indent}<${tagName}${attributes}>`;
+
+    if (voidElements.has(element.tagName)) {
+        return openingTag;
+    }
+
+    const meaningfulChildren = Array.from(element.childNodes)
+        .filter(node => node.nodeType !== Node.TEXT_NODE || node.textContent.trim() !== '');
+
+    if (meaningfulChildren.length === 0) {
+        return `${openingTag}</${tagName}>`;
+    }
+
+    if (meaningfulChildren.every(node => node.nodeType === Node.TEXT_NODE)) {
+        const textContent = meaningfulChildren
+            .map(node => node.textContent)
+            .join('')
+            .trim();
+        return `${openingTag}${escapeHtmlText(textContent)}</${tagName}>`;
+    }
+
+    const childIndent = indent + '    ';
+    const formattedChildren = meaningfulChildren
+        .map(node => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+                return formatCleanHtmlElement(node, childIndent);
+            }
+
+            return `${childIndent}${escapeHtmlText(node.textContent.trim())}`;
+        })
+        .join('\n');
+
+    return `${openingTag}\n${formattedChildren}\n${indent}</${tagName}>`;
+}
+
+function escapeHtmlAttribute(value) {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
+
+function escapeHtmlText(value) {
+    return value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
 }
 
 
@@ -121,7 +176,7 @@ const handleExportModalShow = () => {
 </head>
 <body>
     <div class="container">
-        ${bodyContent}
+${bodyContent}
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script> <!-- Escape closing script tag -->
 </body>

@@ -60,31 +60,10 @@ function parseAndLoadHtml(htmlContent) {
     // All'interno del ciclo forEach in parseAndLoadHtml
     Array.from(elementsToProcess).forEach(loadedElement => {
 
-        let componentType = null;
         let elementToWrap = loadedElement; // The actual element (h1, p, img, etc.)
-
-        // Determine component type based on the loaded element
-        // This needs to be robust and match how elements are generated/saved
-        // --- Modifica per controllare H1-H6 ---
-        if (/^H[1-6]$/.test(loadedElement.tagName)) {
-            componentType = 'heading';
-        } else if (loadedElement.tagName === 'P') {
-            componentType = 'paragraph';
-        } else if (loadedElement.tagName === 'INPUT') {
-            componentType = 'input';
-        } else if (loadedElement.tagName === 'IMG') {
-            componentType = 'image';
-        } else if (loadedElement.tagName === 'BUTTON') {
-            componentType = 'button';
-        } else if (loadedElement.tagName === 'DIV' && loadedElement.classList.contains('card')) {
-            componentType = 'card';
-        // --- Add check for link ---
-        } else if (loadedElement.tagName === 'A') {
-            componentType = 'link';
-        } else if (loadedElement.tagName === 'HR') {
-            componentType = 'horizontal-rule';
-        }
-        // Add more checks if you have other component types
+        // Il riconoscimento del tipo usa lo stesso registry della factory.
+        // Aggiungere un nuovo componente non richiede modifiche al parser.
+        const componentType = getComponentTypeFromElement(loadedElement);
 
         if (componentType) {
             // Create the wrapper and controls for this element

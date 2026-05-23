@@ -1,3 +1,254 @@
+// Registry centrale dei componenti disponibili nel builder.
+// Per aggiungere un nuovo tipo basta aggiungere una voce con:
+// - create(elementToWrap): crea/configura il nodo DOM del componente
+// - matches(loadedElement): riconosce il componente durante l'import HTML
+const componentRegistry = {
+    'heading': {
+        matches: loadedElement => /^H[1-6]$/.test(loadedElement.tagName),
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('h1');
+
+            if (!elementToWrap) {
+                element.textContent = 'Titolo Modificabile';
+            }
+
+            with(element) {
+                setAttribute('contenteditable', 'true');
+                title = 'Doppio click per cambiare livello (H1-H6)';
+                removeEventListener('dblclick', promptChangeHeadingLevel);
+                addEventListener('dblclick', promptChangeHeadingLevel);
+                setAttribute('draggable', 'false');
+            }
+
+            return {
+                element,
+                tagNameDisplay: element.tagName.toLowerCase(),
+                hasDoubleClickAction: true
+            };
+        }
+    },
+    'paragraph': {
+        matches: loadedElement => loadedElement.tagName === 'P',
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('p');
+
+            if (!elementToWrap) {
+                element.textContent = 'Questo è un paragrafo modificabile. Clicca per editarlo.';
+            }
+
+            with(element) {
+                setAttribute('contenteditable', 'true');
+                setAttribute('draggable', 'false');
+            }
+
+            return {
+                element,
+                tagNameDisplay: 'p',
+                hasDoubleClickAction: false
+            };
+        }
+    },
+    'input': {
+        matches: loadedElement => loadedElement.tagName === 'INPUT',
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('input');
+
+            if (!elementToWrap) {
+                element.type = 'text';
+                element.placeholder = 'Campo di input';
+            }
+
+            element.classList.add('form-control');
+
+            with(element) {
+                title = 'Doppio click per cambiare livello (H1-H6)';
+                removeEventListener('dblclick', promptChangeInputAttributes);
+                addEventListener('dblclick', promptChangeInputAttributes);
+                setAttribute('draggable', 'false');
+                removeEventListener('click', preventInputDefaultBehavior);
+                addEventListener('click', preventInputDefaultBehavior);
+            }
+
+            return {
+                element,
+                tagNameDisplay: 'input',
+                hasDoubleClickAction: true
+            };
+        }
+    },
+    'image': {
+        matches: loadedElement => loadedElement.tagName === 'IMG',
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('img');
+
+            if (!elementToWrap) {
+                with(element) {
+                    src = 'https://placehold.co/600x300/e9ecef/adb5bd?text=Immagine';
+                    alt = 'Immagine';
+                    classList.add('img-fluid', 'rounded');
+                }
+            }
+
+            with(element) {
+                style.cursor = 'pointer';
+                title = 'Doppio click per cambiare attributi (src, width, height)';
+                removeEventListener('dblclick', promptChangeImageAttributes);
+                addEventListener('dblclick', promptChangeImageAttributes);
+                setAttribute('draggable', 'false');
+            }
+
+            return {
+                element,
+                tagNameDisplay: 'img',
+                hasDoubleClickAction: true
+            };
+        }
+    },
+    'button': {
+        matches: loadedElement => loadedElement.tagName === 'BUTTON',
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('button');
+
+            if (!elementToWrap) {
+                with(element) {
+                    textContent = 'Testo Pulsante';
+                    classList.add('btn', 'btn-primary', 'rounded-pill');
+                }
+            }
+
+            with(element) {
+                setAttribute('contenteditable', 'true');
+                setAttribute('type', 'button');
+                setAttribute('draggable', 'false');
+            }
+
+            return {
+                element,
+                tagNameDisplay: 'button',
+                hasDoubleClickAction: false
+            };
+        }
+    },
+    'card': {
+        matches: loadedElement => loadedElement.tagName === 'DIV' && loadedElement.classList.contains('card'),
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('div');
+
+            if (!elementToWrap) {
+                with(element) {
+                    classList.add('card', 'shadow-sm');
+                    innerHTML = `
+                        <img src="https://placehold.co/600x200/e9ecef/adb5bd?text=Immagine+Card" class="card-img-top card-image-editable" alt="Immagine Card" title="Clicca per cambiare immagine">
+                        <div class="card-body">
+                            <h5 class="card-title" contenteditable="true">Titolo Card</h5>
+                            <p class="card-text" contenteditable="true">Testo della card modificabile.</p>
+                            <a href="#" class="btn btn-sm btn-outline-secondary card-button-editable" contenteditable="true">Azione</a>
+                        </div>
+                    `;
+                }
+            } else {
+                element.classList.add('card');
+            }
+
+            const cardImage = element.querySelector('.card-img-top, .card-image-editable');
+            if (cardImage) {
+                cardImage.classList.add('card-image-editable');
+                with(cardImage) {
+                    style.cursor = 'pointer';
+                    title = 'Doppio click per cambiare attributi (src, width, height)';
+                    removeEventListener('dblclick', promptChangeImageAttributes);
+                    addEventListener('dblclick', promptChangeImageAttributes);
+                    setAttribute('draggable', 'false');
+                }
+            }
+
+            const cardTitle = element.querySelector('.card-title');
+            if (cardTitle) {
+                cardTitle.setAttribute('contenteditable', 'true');
+                cardTitle.setAttribute('draggable', 'false');
+            }
+
+            const cardText = element.querySelector('.card-text');
+            if (cardText) {
+                cardText.setAttribute('contenteditable', 'true');
+                cardText.setAttribute('draggable', 'false');
+            }
+
+            const cardButton = element.querySelector('.btn, .card-button-editable');
+            if (cardButton) {
+                with(cardButton) {
+                    classList.add('card-button-editable');
+                    setAttribute('contenteditable', 'true');
+                    setAttribute('draggable', 'false');
+                }
+            }
+
+            element.setAttribute('draggable', 'false');
+
+            return {
+                element,
+                tagNameDisplay: 'card',
+                hasDoubleClickAction: true
+            };
+        }
+    },
+    'link': {
+        matches: loadedElement => loadedElement.tagName === 'A',
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('a');
+
+            if (!elementToWrap) {
+                element.textContent = 'Testo del Link Modificabile';
+                element.setAttribute('href', '#');
+            }
+
+            with(element) {
+                setAttribute('contenteditable', 'true');
+                title = 'Doppio click per cambiare URL';
+                removeEventListener('dblclick', promptChangeLinkHref);
+                addEventListener('dblclick', promptChangeLinkHref);
+                setAttribute('draggable', 'false');
+                removeEventListener('click', preventLinkClickInEdit);
+                addEventListener('click', preventLinkClickInEdit);
+            }
+
+            return {
+                element,
+                tagNameDisplay: 'a',
+                hasDoubleClickAction: true
+            };
+        }
+    },
+    'horizontal-rule': {
+        matches: loadedElement => loadedElement.tagName === 'HR',
+        create(elementToWrap = null) {
+            const element = elementToWrap || document.createElement('hr');
+
+            element.setAttribute('draggable', 'false');
+            element.title = 'Doppio click per modificare altezza';
+            element.removeEventListener('dblclick', promptChangeHrHeight);
+            element.addEventListener('dblclick', promptChangeHrHeight);
+
+            return {
+                element,
+                tagNameDisplay: 'hr',
+                hasDoubleClickAction: true
+            };
+        }
+    }
+};
+
+function getComponentDefinition(type) {
+    return componentRegistry[type] || null;
+}
+
+function getComponentTypeFromElement(loadedElement) {
+    const registryEntry = Object.entries(componentRegistry)
+        .find(([, definition]) => definition.matches(loadedElement));
+
+    return registryEntry ? registryEntry[0] : null;
+}
+
 // Crea l'elemento HTML corrispondente al tipo di componente
 // elementToWrap: parametro opzionale specificato se il componente e' stato editato e deve essere wrappato
 function createComponentElement(type, elementToWrap = null) {
@@ -67,187 +318,14 @@ function createComponentElement(type, elementToWrap = null) {
     controls.appendChild(deleteButton);
     elementWrapper.appendChild(controls);
 
-    let element; // Dichiarato qui
-    let tagNameDisplay = ''; // Per mostrare il nome del tag
-    let hasDoubleClickAction = false; // Flag per sapere se aggiungere il bottone modifica
-
-    // --- Aggiornata Logica per usare elementToWrap o creare nuovo elemento ---
-    switch (type) {
-        case 'heading':
-            // Se elementToWrap non e' fornito, crea un nuovo H1 di default
-            element = elementToWrap || document.createElement('h1');
-            tagNameDisplay = element.tagName.toLowerCase();
-            if (!elementToWrap) { // Applica stili/contenuto di default solo se l'elemento viene creato nuovo
-                element.textContent = 'Titolo Modificabile';
-            }
-            // Applica attributi e listener comuni
-            with(element) {
-                setAttribute('contenteditable', 'true');
-                title = 'Doppio click per cambiare livello (H1-H6)';
-                removeEventListener('dblclick', promptChangeHeadingLevel);
-                addEventListener('dblclick', promptChangeHeadingLevel);
-                setAttribute('draggable', 'false');
-            }
-            hasDoubleClickAction = true;
-            break;
-        case 'paragraph':
-            element = elementToWrap || document.createElement('p');
-            tagNameDisplay = 'p';
-            if (!elementToWrap) {
-                element.textContent = 'Questo è un paragrafo modificabile. Clicca per editarlo.';
-            }
-            with(element) {
-                setAttribute('contenteditable', 'true');
-                setAttribute('draggable', 'false');
-            }
-            break;
-        case 'input':
-            element = elementToWrap || document.createElement('input');
-            tagNameDisplay = 'input';
-
-            if(!elementToWrap){
-                element.type = 'text'; // Tipo di default
-                element.placeholder = 'Campo di input';
-                element.classList.add('form-control'); // CLASSE BOOTSTRAP
-            } else {
-                element.classList.add('form-control');
-            }
-
-            with(element) {
-                title = 'Doppio click per cambiare livello (H1-H6)';
-                removeEventListener('dblclick', promptChangeInputAttributes);
-                addEventListener('dblclick', promptChangeInputAttributes);
-                setAttribute('draggable', 'false');
-                // Aggiungi prevenzione comportamento predefinito per tipi specifici
-                removeEventListener('click', preventInputDefaultBehavior);
-                addEventListener('click', preventInputDefaultBehavior);
-            }
-            hasDoubleClickAction = true;
-            break;
-        case 'image':
-            element = elementToWrap || document.createElement('img');
-            tagNameDisplay = 'img';
-            if (!elementToWrap) {
-                with(element) {
-                    src = 'https://placehold.co/600x300/e9ecef/adb5bd?text=Immagine';
-                    alt = 'Immagine';
-                    classList.add('img-fluid', 'rounded');
-                }
-            }
-            with(element) {
-                style.cursor = 'pointer';
-                title = 'Doppio click per cambiare attributi (src, width, height)';
-                removeEventListener('dblclick', promptChangeImageAttributes); // Rimuovi prima per sicurezza
-                addEventListener('dblclick', promptChangeImageAttributes);
-                setAttribute('draggable', 'false');
-            }
-            hasDoubleClickAction = true;
-            break;
-        case 'button':
-            element = elementToWrap || document.createElement('button');
-            tagNameDisplay = 'button';
-            if (!elementToWrap) {
-                with(element) {
-                    textContent = 'Testo Pulsante';
-                    classList.add('btn', 'btn-primary', 'rounded-pill');
-                }
-            }
-            with(element) {
-                setAttribute('contenteditable', 'true');
-                // Assicurati che sia type="button" anche se fornito
-                setAttribute('type', 'button');
-                setAttribute('draggable', 'false');
-            }
-            break;
-        case 'card':
-            element = elementToWrap || document.createElement('div');
-            tagNameDisplay = 'card';
-            if (!elementToWrap) {
-                with(element) {
-                    classList.add('card', 'shadow-sm');
-                    innerHTML = `
-                        <img src="https://placehold.co/600x200/e9ecef/adb5bd?text=Immagine+Card" class="card-img-top card-image-editable" alt="Immagine Card" title="Clicca per cambiare immagine">
-                        <div class="card-body">
-                            <h5 class="card-title" contenteditable="true">Titolo Card</h5>
-                            <p class="card-text" contenteditable="true">Testo della card modificabile.</p>
-                            <a href="#" class="btn btn-sm btn-outline-secondary card-button-editable" contenteditable="true">Azione</a>
-                        </div>
-                    `;
-                }
-            } else {
-                 // Assicurati che le classi base ci siano se l'elemento e' fornito
-                 element.classList.add('card'); // Aggiungi 'card' se non presente
-            }
-
-            // Configura elementi interni (sia per nuovi che per forniti)
-            const cardImage = element.querySelector('.card-img-top, .card-image-editable'); // Trova l'immagine
-            if(cardImage) {
-                cardImage.classList.add('card-image-editable'); // Assicura la classe per il selettore
-                with(cardImage) {
-                    style.cursor = 'pointer';
-                    title = 'Doppio click per cambiare attributi (src, width, height)';
-                    removeEventListener('dblclick', promptChangeImageAttributes);
-                    addEventListener('dblclick', promptChangeImageAttributes);
-                    setAttribute('draggable', 'false');
-                }
-            }
-            const cardTitle = element.querySelector('.card-title');
-            if (cardTitle) {
-                cardTitle.setAttribute('contenteditable', 'true');
-                cardTitle.setAttribute('draggable', 'false');
-            }
-            const cardText = element.querySelector('.card-text');
-            if (cardText) {
-                cardText.setAttribute('contenteditable', 'true');
-                cardText.setAttribute('draggable', 'false');
-            }
-            const cardButton = element.querySelector('.btn, .card-button-editable'); // Trova il bottone
-            if (cardButton) {
-                with(cardButton){
-                    classList.add('card-button-editable'); // Assicura la classe
-                    setAttribute('contenteditable', 'true');
-                    setAttribute('draggable', 'false');
-                }
-            }
-            // L'elemento card (div) stesso non deve essere trascinabile
-            element.setAttribute('draggable', 'false');
-            hasDoubleClickAction = true;
-            break;
-        case 'link':
-            element = elementToWrap || document.createElement('a');
-            tagNameDisplay = 'a';
-            if (!elementToWrap) {
-                element.textContent = 'Testo del Link Modificabile';
-                element.setAttribute('href', '#');
-            }
-            with(element) {
-                setAttribute('contenteditable', 'true');
-                title = 'Doppio click per cambiare URL';
-                removeEventListener('dblclick', promptChangeLinkHref);
-                addEventListener('dblclick', promptChangeLinkHref);
-                setAttribute('draggable', 'false');
-                // Aggiungi prevenzione click in edit mode
-                removeEventListener('click', preventLinkClickInEdit);
-                addEventListener('click', preventLinkClickInEdit);
-            }
-            hasDoubleClickAction = true;
-            break;
-        case 'horizontal-rule':
-            element = elementToWrap || document.createElement('hr');
-            tagNameDisplay = 'hr';
-            // L'elemento HR non ha contenuto modificabile o attributi speciali da gestire qui
-            // Assicurati che non sia trascinabile direttamente
-            element.setAttribute('draggable', 'false');
-            element.title = 'Doppio click per modificare altezza';
-            element.removeEventListener('dblclick', promptChangeHrHeight); // Rimuovi per sicurezza
-            element.addEventListener('dblclick', promptChangeHrHeight);
-            hasDoubleClickAction = true;
-            break;
-        default:
-            console.warn(`Tipo di componente sconosciuto: ${type}. Nessun elemento creato.`);
-            return null; // Nessun elemento valido da wrappare
+    const componentDefinition = getComponentDefinition(type);
+    if (!componentDefinition) {
+        console.warn(`Tipo di componente sconosciuto: ${type}. Nessun elemento creato.`);
+        return null; // Nessun elemento valido da wrappare
     }
 
+    // Il renderer non conosce i singoli tipi: delega creazione e setup al registry.
+    const { element, tagNameDisplay, hasDoubleClickAction } = componentDefinition.create(elementToWrap);
 
     // --- Popola e aggiungi l'info box ---
     const tagNameSpan = document.createElement('span');
