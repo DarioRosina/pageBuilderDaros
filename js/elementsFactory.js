@@ -2,9 +2,18 @@
 // Per aggiungere un nuovo tipo basta aggiungere una voce con:
 // - create(elementToWrap): crea/configura il nodo DOM del componente
 // - matches(loadedElement): riconosce il componente durante l'import HTML
+// - getDoubleClickTarget(wrapper): opzionale, restituisce il nodo da modificare via dblclick
+// - hasTextSelection: opzionale, abilita la selezione automatica del testo editabile
+// - getTextSelectionTarget(wrapper, clickedElement): opzionale, restituisce il nodo testuale da selezionare
+function getPrimaryComponentChild(wrapper) {
+    return wrapper.querySelector(':scope > *:not(.element-controls):not(.hover-info)');
+}
+
 const componentRegistry = {
     'heading': {
         matches: loadedElement => /^H[1-6]$/.test(loadedElement.tagName),
+        hasTextSelection: true,
+        getDoubleClickTarget: getPrimaryComponentChild,
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('h1');
 
@@ -22,13 +31,13 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: element.tagName.toLowerCase(),
-                hasDoubleClickAction: true
+                tagNameDisplay: element.tagName.toLowerCase()
             };
         }
     },
     'paragraph': {
         matches: loadedElement => loadedElement.tagName === 'P',
+        hasTextSelection: true,
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('p');
 
@@ -43,13 +52,16 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'p',
-                hasDoubleClickAction: false
+                tagNameDisplay: 'p'
             };
         }
     },
     'input': {
         matches: loadedElement => loadedElement.tagName === 'INPUT',
+        restrictedDefaultClickTypes: ['date', 'time', 'datetime-local', 'month', 'week', 'color', 'file'],
+        getDoubleClickTarget(wrapper) {
+            return wrapper.querySelector(':scope > input');
+        },
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('input');
 
@@ -71,13 +83,13 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'input',
-                hasDoubleClickAction: true
+                tagNameDisplay: 'input'
             };
         }
     },
     'image': {
         matches: loadedElement => loadedElement.tagName === 'IMG',
+        getDoubleClickTarget: getPrimaryComponentChild,
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('img');
 
@@ -99,13 +111,13 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'img',
-                hasDoubleClickAction: true
+                tagNameDisplay: 'img'
             };
         }
     },
     'button': {
         matches: loadedElement => loadedElement.tagName === 'BUTTON',
+        hasTextSelection: true,
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('button');
 
@@ -124,13 +136,26 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'button',
-                hasDoubleClickAction: false
+                tagNameDisplay: 'button'
             };
         }
     },
     'card': {
         matches: loadedElement => loadedElement.tagName === 'DIV' && loadedElement.classList.contains('card'),
+        getDoubleClickTarget(wrapper) {
+            const cardElement = wrapper.querySelector(':scope > .card');
+
+            if (cardElement) {
+                const targetElementToDoubleClick = cardElement.querySelector('.card-image-editable');
+                if (!targetElementToDoubleClick) {
+                    console.log("Nessun elemento .card-image-editable trovato per dblclick nella card.");
+                }
+                return targetElementToDoubleClick;
+            }
+
+            console.warn("Elemento .card non trovato nel wrapper per il dblclick simulato.");
+            return null;
+        },
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('div');
 
@@ -187,13 +212,14 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'card',
-                hasDoubleClickAction: true
+                tagNameDisplay: 'card'
             };
         }
     },
     'link': {
         matches: loadedElement => loadedElement.tagName === 'A',
+        hasTextSelection: true,
+        getDoubleClickTarget: getPrimaryComponentChild,
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('a');
 
@@ -214,13 +240,13 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'a',
-                hasDoubleClickAction: true
+                tagNameDisplay: 'a'
             };
         }
     },
     'horizontal-rule': {
         matches: loadedElement => loadedElement.tagName === 'HR',
+        getDoubleClickTarget: getPrimaryComponentChild,
         create(elementToWrap = null) {
             const element = elementToWrap || document.createElement('hr');
 
@@ -231,8 +257,7 @@ const componentRegistry = {
 
             return {
                 element,
-                tagNameDisplay: 'hr',
-                hasDoubleClickAction: true
+                tagNameDisplay: 'hr'
             };
         }
     }
@@ -325,7 +350,8 @@ function createComponentElement(type, elementToWrap = null) {
     }
 
     // Il renderer non conosce i singoli tipi: delega creazione e setup al registry.
-    const { element, tagNameDisplay, hasDoubleClickAction } = componentDefinition.create(elementToWrap);
+    const { element, tagNameDisplay } = componentDefinition.create(elementToWrap);
+    const hasDoubleClickAction = typeof componentDefinition.getDoubleClickTarget === 'function';
 
     // --- Popola e aggiungi l'info box ---
     const tagNameSpan = document.createElement('span');

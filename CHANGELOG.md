@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-05-24
+
+### Changed
+
+- Refactored component rendering to use a central component registry, removing type-based switch logic from the renderer.
+
+- Moved double-click target lookup and automatic text-selection support into the component registry, so new component types can be extended by adding registry metadata instead of changing shared handlers.
+
+- Improved component selection behavior so clicking an already selected editable element keeps it selected for inline editing.
+
+### Fixed
+
+- Added defensive checks around deferred text selection to avoid focusing or selecting DOM nodes that were removed or replaced before the async selection step runs.
+
+- Moved input default-click restrictions into the input component registry definition and added safer event-target checks in edit handlers.
+
+
 ## [1.0.2] - 2026-05-23
 
 ### Changed
