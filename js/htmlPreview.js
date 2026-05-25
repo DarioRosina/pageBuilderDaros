@@ -1,4 +1,10 @@
 // --- Preview Logic ---
+const handlePreviewModalHidden = () => {
+    if (!previewButton || !document.contains(previewButton)) return;
+
+    previewButton.focus();
+};
+
 // Definisci l'handler per il click sul pulsante di anteprima
 const handlePreviewClick = () => {
     const bodyContent = generateCleanHtml();
@@ -61,5 +67,13 @@ ${bodyContent}
 };
 
 
-previewButton.removeEventListener('click', handlePreviewClick); // Rimuovi se gia' presente
-previewButton.addEventListener('click', handlePreviewClick);
+if (previewButton) {
+    previewButton.removeEventListener('click', handlePreviewClick); // Rimuovi se gia' presente
+    previewButton.addEventListener('click', handlePreviewClick);
+}
+
+const previewModalElement = document.getElementById('previewModal');
+if (previewModalElement) {
+    previewModalElement.removeEventListener('hidden.bs.modal', handlePreviewModalHidden);
+    previewModalElement.addEventListener('hidden.bs.modal', handlePreviewModalHidden);
+}

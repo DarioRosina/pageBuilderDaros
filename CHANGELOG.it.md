@@ -7,6 +7,16 @@ Tutte le modifiche rilevanti apportate a questo progetto saranno documentate in 
 Il formato si basa su [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 e questo progetto aderisce al [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-05-25
+
+### Added
+
+- Aggiunta la modalita' dark mode con toggle nella navbar e preferenza utente persistente.
+
+### Changed
+
+- Migliorato l'aspetto del Page Builder con colori, tipografia, spaziature, ombre, stile delle modali e contrasto light/dark aggiornati.
+
 ## [1.0.3] - 2026-05-24
 
 ### Changed
